@@ -84,14 +84,12 @@ public class ParkingSlot {
     @Override
     public String toString() {
         return  this.level.toString() +
-                " P - " + this.positionX  +
-                " " + this.positionY + "\n" +
-                "state = " + this.state.toString() +
-                " nearExit = " + this.nearExit + "\n";
+                " P-" + this.positionX  +
+                " " + this.positionY;
     }
 
-    public boolean isSlotEmpty() {
-        return this.getState() == ParkingSlotState.VACANT;
+    public boolean isSlotFull() {
+        return this.getState() == ParkingSlotState.OCCUPIED;
     }
 
 

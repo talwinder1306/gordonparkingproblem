@@ -44,7 +44,7 @@ public class Floor {
 
     @Override
     public String toString() {
-        return "F - " + this.number;
+        return "F-" + this.number;
     }
 
     @Override
@@ -69,7 +69,7 @@ public class Floor {
         }
         for (int i = 0; i < Floor.maxLevelNumber; i++) {
             parkingSlot = getParkingSlotAtLevelAndPositionXY(x, y, i, currentFloor, parkingSlot);
-            if (parkingSlot.isSlotEmpty() == false) {
+            if (parkingSlot.isSlotFull()) {
                 return false;
             }
         }
@@ -90,6 +90,18 @@ public class Floor {
         parkingSlot.setLevel(level);
 
         return parkingSlot;
+    }
+
+    public static ParkingSlot getParkingSlotAtOtherLevelAndPositionXY(ParkingSlot parkingSlot, VehicleType vehicleType){
+        int otherlevelNumber = (parkingSlot.getLevel().getLevelNumber() == 0)? 1: 0;
+        ParkingSlot parkingSlotOtherLevel;
+        if(vehicleType == VehicleType.BIKE){
+            parkingSlotOtherLevel = new BikeParkingSlot();
+        } else {
+            parkingSlotOtherLevel = new CarParkingSlot();
+        }
+        return Floor.getParkingSlotAtLevelAndPositionXY(parkingSlot.getPositionX(), parkingSlot.getPositionY(),
+                otherlevelNumber, parkingSlot.getLevel().getFloor().getNumber(), parkingSlotOtherLevel);
     }
 
 }

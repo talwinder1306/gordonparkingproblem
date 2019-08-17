@@ -57,7 +57,7 @@ public class Level {
 
     @Override
     public String toString() {
-        return this.floor.toString() + " L - " + this.levelNumber;
+        return this.floor.toString() + " L-" + this.levelNumber;
     }
 
     @Override

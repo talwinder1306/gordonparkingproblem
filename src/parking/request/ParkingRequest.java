@@ -1,12 +1,16 @@
 package parking.request;
 
 import parking.admin.Customer;
+import parking.admin.CustomerType;
 import parking.admin.Vehicle;
 import parking.admin.VehicleType;
 import parking.config.ParkingLot;
+import parking.validator.*;
 
 public class ParkingRequest {
 
+    private static final String INCOMING = "IN";
+    private static final String OUTGOING = "OUT";
     private String vehicleNo;
     private String vehicleType;
     private String customerType;
@@ -45,7 +49,10 @@ public class ParkingRequest {
         parkingLot.setNumberOfFloors(numberOfFloors);
     }
 
-    public String sendRequest(){
+    public void sendRequest(){
+        if(validInput() == false){
+            return;
+        }
         Vehicle vehicle = new Vehicle();
         vehicle.setLicenseNumber(vehicleNo);
         vehicle.setType(getVehicleType());
@@ -53,13 +60,29 @@ public class ParkingRequest {
         customer.setVehicle(vehicle);
         customer.setCustomerType(customerType);
 
-        if("IN".equalsIgnoreCase(action)){
-            parkingLot.fillSpot(vehicle, customer);
-        } else if("OUT".equalsIgnoreCase(action)){
-            parkingLot.clearSpot(vehicle);
+        if(INCOMING.equalsIgnoreCase(action)){
+            parkingLot.assignSpot(vehicle, customer);
+        } else if(OUTGOING.equalsIgnoreCase(action)){
+            parkingLot.freeSpot(vehicle);
         }
 
-        return "";
+    }
+
+    public boolean validInput(){
+        try {
+            if (INCOMING.equalsIgnoreCase(action) == false && OUTGOING.equalsIgnoreCase(action) == false) {
+               throw new InvalidInputException("Action can be either in or out");
+            }
+            if(customerType != null && CustomerType.ELDER.toString().equalsIgnoreCase(customerType) == false
+                    && CustomerType.ROYAL.toString().equalsIgnoreCase(customerType) == false
+                    && CustomerType.COMMON.toString().equalsIgnoreCase(customerType) == false){
+                throw new InvalidInputException("Customer type can be either elder, royal or common");
+            }
+        } catch(InvalidInputException e){
+            e.printStackTrace();
+        }
+
+        return true;
     }
 
 }

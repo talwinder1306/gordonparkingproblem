@@ -23,10 +23,19 @@ public class Customer {
 
     public void setCustomerType(String customerType){
         customerType = customerType.toUpperCase();
-        switch(customerType){
-            case "ELDER" : this.setType(CustomerType.ELDER); break;
-            case "ROYAL" : this.setType(CustomerType.ROYAL); break;
-            default: this.setType(CustomerType.COMMON);
+        if(vehicle.getType() == VehicleType.CAR) {
+            switch (customerType) {
+                case "ELDER":
+                    this.setType(CustomerType.ELDER);
+                    break;
+                case "ROYAL":
+                    this.setType(CustomerType.ROYAL);
+                    break;
+                default:
+                    this.setType(CustomerType.COMMON);
+            }
+        } else {
+            this.setType(CustomerType.COMMON);
         }
     }
 }

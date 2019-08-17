@@ -3,10 +3,10 @@ package parking.config;
 public class CarParkingSlot extends ParkingSlot {
 
     @Override
-    public boolean isSlotEmpty() {
+    public boolean isSlotFull() {
         if(ParkingLot.vacantParkingSlotsQueueByNearExit.contains(this)){
-            return true;
+            return false;
         }
-        return false;
+        return true;
     }
 }

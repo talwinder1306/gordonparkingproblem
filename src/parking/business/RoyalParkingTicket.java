@@ -1,6 +1,6 @@
 package parking.business;
 
-import parking.admin.Customer;
+import parking.validator.*;
 import parking.admin.Vehicle;
 import parking.config.Floor;
 import parking.config.Level;
@@ -13,23 +13,27 @@ import java.util.List;
 public class RoyalParkingTicket extends ParkingTicket {
     @Override
     public ParkingSlot findVacantSlot() {
-        List<ParkingSlot> notSuitableParkingSlotsList = new ArrayList<>();
-        ParkingSlot parkingSlot = ParkingLot.vacantParkingSlotsQueueByNearExit.remove();
-        while (isSuitableParkingSlotForRoyalty(parkingSlot, notSuitableParkingSlotsList) == false && ParkingLot.vacantParkingSlotsQueueByNearExit.size() != 0) {
+        ParkingSlot parkingSlot = null;
+        try {
+            List<ParkingSlot> notSuitableParkingSlotsList = new ArrayList<>();
             parkingSlot = ParkingLot.vacantParkingSlotsQueueByNearExit.remove();
+            while (isSuitableParkingSlotForRoyalty(parkingSlot, notSuitableParkingSlotsList) == false && ParkingLot.vacantParkingSlotsQueueByNearExit.size() != 0) {
+                parkingSlot = ParkingLot.vacantParkingSlotsQueueByNearExit.remove();
+            }
+            /*If all slots are checked this Queue will be empty so we need to set parkingSlot as null and display an error*/
+            if (ParkingLot.vacantParkingSlotsQueueByNearExit.size() == 0) {
+                parkingSlot = null;
+                throw new NoSlotsAvailableException("No slots available with all vacant slots around it");
+            }
+            /*Add all unsuitable Parking Slots back to vacantParkingSlotsQueueByNearExit*/
+            ParkingLot.vacantParkingSlotsQueueByNearExit.addAll(notSuitableParkingSlotsList);
+            if (parkingSlot != null) {
+                ParkingLot.vacantParkingSlotsQueueByNearExit.add(parkingSlot);
+                blockAllSpotsAround(this.vehicle, parkingSlot);
+            }
+        } catch (NoSlotsAvailableException e){
+            System.out.println(e.getMessage());
         }
-        /*If all slots are checked this Queue will be empty so we need to set parkingSlot as null and display an error*/
-        if(ParkingLot.vacantParkingSlotsQueueByNearExit.size() == 0){
-            parkingSlot = null;
-            System.out.println("No slots available with all vacant slots around it");
-        }
-        /*Add all unsuitable Parking Slots back to vacantParkingSlotsQueueByNearExit*/
-        ParkingLot.vacantParkingSlotsQueueByNearExit.addAll(notSuitableParkingSlotsList);
-        if(parkingSlot != null) {
-            ParkingLot.vacantParkingSlotsQueueByNearExit.add(parkingSlot);
-            blockAllSpotsAround(this.vehicle, parkingSlot);
-        }
-
         return parkingSlot;
     }
 
@@ -38,15 +42,12 @@ public class RoyalParkingTicket extends ParkingTicket {
 
         /*If parking slot above/below and to the right and left both above and below are empty it is suitable*/
         int currentFloor = parkingSlot.getLevel().getFloor().getNumber();
-        int currentLevel = parkingSlot.getLevel().getLevelNumber();
         int currentPositionX = parkingSlot.getPositionX();
         int currentPositionY = parkingSlot.getPositionY();
 
-        int otherLevelNumber = (currentLevel == 0) ? 1 : 0;
         /*If notSuitableParkingSlotsList already contains the level below/above the parking slot
         that means we do not need to check as this slot will also be unsuitable*/
-        ParkingSlot parkingSlotOtherLevel = Floor.getParkingSlotAtLevelAndPositionXY(currentPositionX, currentPositionY, otherLevelNumber
-                                            , currentFloor, vehicle.getNewParkingSlotForVehicle());
+        ParkingSlot parkingSlotOtherLevel = Floor.getParkingSlotAtOtherLevelAndPositionXY(parkingSlot, vehicle.getType());
 
         if(notSuitableParkingSlotsList.contains(parkingSlotOtherLevel)){
             notSuitableParkingSlotsList.add(parkingSlot);
@@ -56,7 +57,7 @@ public class RoyalParkingTicket extends ParkingTicket {
         int leftPosition = currentPositionX - 1;
         int rightPosition = currentPositionX + 1;
 
-        if(parkingSlotOtherLevel.isSlotEmpty() == false){
+        if(parkingSlotOtherLevel.isSlotFull()){
             notSuitableParkingSlotsList.add(parkingSlot);
             return false;
         }
@@ -83,14 +84,12 @@ public class RoyalParkingTicket extends ParkingTicket {
         int currentLevel = parkingSlot.getLevel().getLevelNumber();
         int currentPositionX = parkingSlot.getPositionX();
         int currentPositionY = parkingSlot.getPositionY();
-        int otherLevel = (currentLevel == 0) ? 1 : 0;
 
         int leftPosition = currentPositionX - 1;
         int rightPosition = currentPositionX + 1;
         List<ParkingSlot> parkingSlotList = new ArrayList<>();
 
-        ParkingSlot parkingSlotOtherLevel = Floor.getParkingSlotAtLevelAndPositionXY(currentPositionX, currentPositionY, otherLevel,
-                                            currentFloor, vehicle.getNewParkingSlotForVehicle());
+        ParkingSlot parkingSlotOtherLevel = Floor.getParkingSlotAtOtherLevelAndPositionXY(parkingSlot, vehicle.getType());
         ParkingLot.removeFromVacantParkingSlotQueues(parkingSlotOtherLevel);
         parkingSlotList.add(parkingSlotOtherLevel);
 
