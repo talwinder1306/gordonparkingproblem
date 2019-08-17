@@ -1,0 +1,65 @@
+package parking.request;
+
+import parking.admin.Customer;
+import parking.admin.Vehicle;
+import parking.admin.VehicleType;
+import parking.config.ParkingLot;
+
+public class ParkingRequest {
+
+    private String vehicleNo;
+    private String vehicleType;
+    private String customerType;
+    private String action;
+    private static ParkingLot parkingLot = new ParkingLot();
+
+    public ParkingRequest(){}
+
+    public ParkingRequest(String vehicleNo, String vehicleType, String customerType, String action) {
+        this.vehicleNo = vehicleNo;
+        this.vehicleType = vehicleType;
+        this.customerType = customerType;
+        this.action = action;
+    }
+
+    public String getVehicleNo() {
+        return vehicleNo;
+    }
+
+    public VehicleType getVehicleType() {
+        if("BIKE".equalsIgnoreCase(vehicleType)){
+            return VehicleType.BIKE;
+        }
+        return VehicleType.CAR;
+    }
+
+    public String getCustomerType() {
+        return customerType;
+    }
+
+    public String getAction() {
+        return action;
+    }
+
+    public void setNumberOfFloors(int numberOfFloors) {
+        parkingLot.setNumberOfFloors(numberOfFloors);
+    }
+
+    public String sendRequest(){
+        Vehicle vehicle = new Vehicle();
+        vehicle.setLicenseNumber(vehicleNo);
+        vehicle.setType(getVehicleType());
+        Customer customer = new Customer();
+        customer.setVehicle(vehicle);
+        customer.setCustomerType(customerType);
+
+        if("IN".equalsIgnoreCase(action)){
+            parkingLot.fillSpot(vehicle, customer);
+        } else if("OUT".equalsIgnoreCase(action)){
+            parkingLot.clearSpot(vehicle);
+        }
+
+        return "";
+    }
+
+}
