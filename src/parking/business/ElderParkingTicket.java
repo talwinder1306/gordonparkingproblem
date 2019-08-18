@@ -23,4 +23,9 @@ public class ElderParkingTicket extends ParkingTicket {
         }
         return parkingSlot;
     }
+
+    @Override
+    public Fare getFare() {
+        return Fare.ELDER;
+    }
 }

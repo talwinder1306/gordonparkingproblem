@@ -20,7 +20,7 @@ public class ParkingDashboard {
                             continue;
                         }
                         ParkingSlot parkingSlot = Floor.getParkingSlotAtLevelAndPositionXY(x, y, j, i, new ParkingSlot());
-                        if(ParkingLot.occupiedBikeParkingSlotsMap.containsKey(parkingSlot)){
+                        if(ParkingLot.occupiedBikeParkingSlotsMap.containsKey(parkingSlot) && ParkingLot.occupiedBikeParkingSlotsMap.get(parkingSlot) > 0){
                             System.out.print(parkingSlot.toString() + ": BIKE");
                         } else if(ParkingLot.vacantParkingSlotsQueueByNearExit.contains(parkingSlot) == false){
                             System.out.print(parkingSlot.toString() + ": CAR");
@@ -37,6 +37,7 @@ public class ParkingDashboard {
     }
 
     public static void printAssignedParkingSlot(ParkingSlot parkingSlot, Vehicle vehicle){
-        System.out.println(vehicle.toString() + " assigned to " + parkingSlot.toString());
+        ParkingTicket parkingTicket = ParkingLot.parkingSlotToTicketMap.get(parkingSlot);
+        System.out.println(vehicle.toString() + " assigned to " + parkingSlot.toString() + " " + parkingTicket.toString());
     }
 }

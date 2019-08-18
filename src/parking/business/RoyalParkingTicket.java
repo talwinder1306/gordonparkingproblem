@@ -11,6 +11,12 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class RoyalParkingTicket extends ParkingTicket {
+
+    @Override
+    public Fare getFare() {
+        return Fare.ROYAL;
+    }
+
     @Override
     public ParkingSlot findVacantSlot() {
         ParkingSlot parkingSlot = null;

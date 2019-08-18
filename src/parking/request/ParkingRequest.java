@@ -1,6 +1,5 @@
 package parking.request;
 
-import parking.admin.Customer;
 import parking.admin.CustomerType;
 import parking.admin.Vehicle;
 import parking.admin.VehicleType;
@@ -11,19 +10,24 @@ public class ParkingRequest {
 
     private static final String INCOMING = "IN";
     private static final String OUTGOING = "OUT";
+    private static final String YES = "Y";
+    private static final String NO = "N";
+
     private String vehicleNo;
     private String vehicleType;
     private String customerType;
     private String action;
+    private String isCarpooled;
     private static ParkingLot parkingLot = new ParkingLot();
 
     public ParkingRequest(){}
 
-    public ParkingRequest(String vehicleNo, String vehicleType, String customerType, String action) {
+    public ParkingRequest(String vehicleNo, String vehicleType, String customerType, String action, String isCarpooled) {
         this.vehicleNo = vehicleNo;
         this.vehicleType = vehicleType;
         this.customerType = customerType;
         this.action = action;
+        this.isCarpooled = isCarpooled;
     }
 
     public String getVehicleNo() {
@@ -56,12 +60,16 @@ public class ParkingRequest {
         Vehicle vehicle = new Vehicle();
         vehicle.setLicenseNumber(vehicleNo);
         vehicle.setType(getVehicleType());
-        Customer customer = new Customer();
-        customer.setVehicle(vehicle);
-        customer.setCustomerType(customerType);
+        vehicle.setCustomerType(customerType);
+
+        if(YES.equalsIgnoreCase(isCarpooled)){
+            vehicle.setCarpooled(true);
+        } else {
+            vehicle.setCarpooled(false);
+        }
 
         if(INCOMING.equalsIgnoreCase(action)){
-            parkingLot.assignSpot(vehicle, customer);
+            parkingLot.assignSpot(vehicle);
         } else if(OUTGOING.equalsIgnoreCase(action)){
             parkingLot.freeSpot(vehicle);
         }
@@ -79,7 +87,7 @@ public class ParkingRequest {
                 throw new InvalidInputException("Customer type can be either elder, royal or common");
             }
         } catch(InvalidInputException e){
-            e.printStackTrace();
+            System.out.println(e.getMessage());
         }
 
         return true;
