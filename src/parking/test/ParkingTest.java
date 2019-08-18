@@ -19,7 +19,7 @@ public class ParkingTest {
             parkingRequest.setNumberOfFloors(numberOfFloors);
             /*Add code to take input from command line*/
             String input;
-           /* while(true){
+            while(true){
                 String vehicleNo;
                 String vehicleType;
                 String customerType;
@@ -54,8 +54,8 @@ public class ParkingTest {
                 if("END".equalsIgnoreCase(input)){
                     break;
                 }
-            }*/
-            ParkingRequest pr1 = new ParkingRequest("1623", "car", "common", "in", "N");
+            }
+            /*ParkingRequest pr1 = new ParkingRequest("1623", "car", "common", "in", "N");
             ParkingRequest pr2 = new ParkingRequest("1623", "car", "common", "in", "N");
             ParkingRequest pr3 = new ParkingRequest("1623", "car", "common", "in", "N");
             ParkingRequest pr4 = new ParkingRequest("1623", "car", "common", "in", "N");
@@ -79,7 +79,7 @@ public class ParkingTest {
             pr2.sendRequest();
             pr2bo.sendRequest();
             pr6.sendRequest();
-            pr6bo.sendRequest();
+            pr6bo.sendRequest();*/
 
 
         } catch (IOException io){
