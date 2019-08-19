@@ -1,4 +1,4 @@
-![Class Diagram](https://github.com/talwinder1306/gordonparkingproblem/blob/master/Class%20Diagram.jpeg)
+![Class Diagram](https://github.com/talwinder1306/gordonparkingproblem/blob/master/UML%20Class%20Diagram.png)
 
 
 Assumption regarding functionalities while designing
