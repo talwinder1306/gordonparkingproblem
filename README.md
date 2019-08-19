@@ -1,4 +1,4 @@
-![Class Diagram](gordonparkingproblem/Class Diagram.jpeg)
+![Class Diagram](https://github.com/talwinder1306/gordonparkingproblem/blob/master/Class%20Diagram.jpeg)
 
 
 Assumption regarding functionalities while designing
