@@ -1,3 +1,6 @@
+![Class Diagram](gordonparkingproblem/Class Diagram.jpeg)
+
+
 Assumption regarding functionalities while designing
 1. Parking slots closer to the exits. - The parking slots closer to the exit will be filled first
 
